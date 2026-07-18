@@ -60,7 +60,7 @@ export default function Home() {
                                     role="option"
                                     onMouseDown={(event) => event.preventDefault()}
                                 >
-                                    <img src={dish.image} alt="" />
+                                    <img src={dish.image} alt="" width={"40px"} height={"40px"} />
                                     <span>
                                         <strong>{dish.name}</strong>
                                         <small>{dish.game}</small>
