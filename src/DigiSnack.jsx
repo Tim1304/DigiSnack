@@ -8,6 +8,7 @@ function DigiSnack() {
             <Routes>
                 <Route path="/" element={<Home />}/>
                 <Route path="/games/:gameSlug" element={<FoodDetails />}/>
+                <Route path="/games/:gameSlug/foods/:dishSlug" element={<FoodDetails />}/>
             </Routes>
         </BrowserRouter>
     );

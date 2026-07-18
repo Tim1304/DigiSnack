@@ -18,6 +18,8 @@ body {
 }
 
 .search-container {
+  position: relative;
+  z-index: 2;
   width: min(100%, 42rem);
   margin: 0 auto;
 }
@@ -31,6 +33,73 @@ body {
 
 .search-input.form-control::placeholder {
   color: #e4e4e4;
+}
+
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  left: 0;
+  overflow: hidden;
+  max-height: 30rem;
+  overflow-y: auto;
+  background: #222d43;
+  border: 1px solid #3b4b68;
+  border-radius: 0.5rem;
+  box-shadow: 0 16px 35px rgb(0 0 0 / 40%);
+}
+
+.search-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.7rem 0.9rem;
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid #3b4b68;
+}
+
+.search-suggestion:last-child {
+  border-bottom: 0;
+}
+
+.search-suggestion:hover,
+.search-suggestion:focus-visible {
+  color: #fff;
+  background: #334362;
+  outline: none;
+}
+
+.search-suggestion img {
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: 0 0 auto;
+  object-fit: contain;
+  background: #151c2c;
+  border-radius: 0.35rem;
+}
+
+.search-suggestion span {
+  display: grid;
+  min-width: 0;
+}
+
+.search-suggestion strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-suggestion small,
+.dish-game {
+  color: #aebbd1;
+}
+
+.no-suggestions {
+  margin: 0;
+  padding: 1rem;
+  color: #cbd3df;
+  text-align: center;
 }
 
 .game-card-grid {
@@ -80,13 +149,70 @@ body {
 }
 
 .details-page {
-  display: grid;
   min-height: 100vh;
+  padding: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.details-empty {
+  display: grid;
   place-content: center;
   gap: 1rem;
   text-align: center;
 }
 
 .back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
   color: #7db7ff;
+}
+
+.dish-details-card {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.85fr) minmax(18rem, 1.15fr);
+  overflow: hidden;
+  width: min(100%, 64rem);
+  margin: 0 auto;
+  background: #222d43;
+  border: 1px solid #3b4b68;
+  border-radius: 1rem;
+  box-shadow: 0 18px 45px rgb(0 0 0 / 30%);
+}
+
+.dish-details-image {
+  width: 100%;
+  height: 100%;
+  min-height: 30rem;
+  object-fit: contain;
+  padding: 2rem;
+  background: #151c2c;
+}
+
+.dish-details-content {
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.dish-details-content h1 {
+  margin-bottom: 2rem;
+}
+
+.dish-details-content h2 {
+  margin-top: 1.5rem;
+  font-size: 1.15rem;
+}
+
+.source-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #7db7ff;
+}
+
+@media (max-width: 700px) {
+  .dish-details-card {
+    grid-template-columns: 1fr;
+  }
+
+  .dish-details-image {
+    min-height: 18rem;
+    max-height: 24rem;
+  }
 }
