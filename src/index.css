@@ -148,6 +148,98 @@ body {
   text-align: center;
 }
 
+.game-foods-page {
+  min-height: 100vh;
+  padding: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.game-foods-header {
+  width: min(100%, 78rem);
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+.game-foods-header p {
+  margin-bottom: 0.35rem;
+  color: #7db7ff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.game-foods-header h1 {
+  margin-bottom: 0.5rem;
+}
+
+.game-foods-header span {
+  color: #aebbd1;
+}
+
+.food-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+  gap: 1.5rem;
+  width: min(100%, 78rem);
+  margin: 0 auto;
+}
+
+.food-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.food-card {
+  height: 100%;
+  overflow: hidden;
+  color: #fff;
+  background: #222d43;
+  border: 1px solid #3b4b68;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.food-card-link:hover .food-card,
+.food-card-link:focus-visible .food-card {
+  transform: translateY(-5px);
+  border-color: #7db7ff;
+  box-shadow: 0 14px 30px rgb(0 0 0 / 35%);
+}
+
+.food-card-link:focus-visible {
+  border-radius: var(--bs-card-border-radius);
+  outline: 3px solid #7db7ff;
+  outline-offset: 4px;
+}
+
+.food-card-image-wrap {
+  display: grid;
+  height: 210px;
+  padding: 1rem;
+  place-items: center;
+  background: #151c2c;
+}
+
+.food-card .card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.food-card .card-title {
+  font-size: 1.05rem;
+}
+
+.food-card .card-text {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: #bec8d8;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
 .details-page {
   min-height: 100vh;
   padding: clamp(1.25rem, 4vw, 3.5rem);

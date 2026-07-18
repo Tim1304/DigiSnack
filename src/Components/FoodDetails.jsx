@@ -1,39 +1,26 @@
 import { NavLink, useParams } from "react-router";
 import { findDish } from "../data/dishes.js";
 
-const gameTitles = {
-    "valheim": "Valheim",
-    "red-dead-redemption-2": "Red Dead Redemption 2",
-    "fallout-76": "Fallout 76",
-};
-
 export default function FoodDetails() {
     const { gameSlug, dishSlug } = useParams();
-    const dish = dishSlug ? findDish(gameSlug, dishSlug) : null;
-    const gameTitle = gameTitles[gameSlug];
-
-    if (dishSlug && !dish) {
-        return (
-            <main className="details-page details-empty">
-                <h1>Dish not found</h1>
-                <NavLink to="/" className="back-link">Back to search</NavLink>
-            </main>
-        );
-    }
+    const dish = findDish(gameSlug, dishSlug);
 
     if (!dish) {
         return (
             <main className="details-page details-empty">
-                <h1>{gameTitle ?? "Game not found"}</h1>
-                <p>Use the search on the home page to choose a dish.</p>
-                <NavLink to="/" className="back-link">Back to search</NavLink>
+                <h1>Dish not found</h1>
+                <NavLink to={`/games/${gameSlug}`} className="back-link">
+                    Back to dishes
+                </NavLink>
             </main>
         );
     }
 
     return (
         <main className="details-page">
-            <NavLink to="/" className="back-link">← Back to search</NavLink>
+            <NavLink to={`/games/${gameSlug}`} className="back-link">
+                &larr; Back to dishes
+            </NavLink>
             <article className="dish-details-card">
                 <img className="dish-details-image" src={dish.image} alt={dish.name} />
                 <div className="dish-details-content">
