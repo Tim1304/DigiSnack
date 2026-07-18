@@ -307,7 +307,7 @@ body {
 .browse-button {
   padding: 0.7rem 1rem;
   color: #101726;
-  background: #7db7ff;
+  background: linear-gradient(#ff007f, #7f00ff);
   border: 0;
   border-radius: 0.45rem;
   font-weight: 700;
@@ -328,7 +328,7 @@ body {
 .browse-button:hover,
 .browse-button:focus-visible {
   color: #101726;
-  background: #a8d1ff;
+  background: linear-gradient(#ff5100, #fffb00);
   transform: translateY(-1px);
   outline: 2px solid #fff;
   outline-offset: 2px;
