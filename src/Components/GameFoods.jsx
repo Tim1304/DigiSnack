@@ -1,6 +1,7 @@
 import { Card } from "react-bootstrap";
 import { NavLink, useParams } from "react-router";
 import { dishes } from "../data/dishes.js";
+import { useCart } from "../context/CartContext.jsx";
 
 const gameTitles = {
     valheim: "Valheim",
@@ -12,6 +13,7 @@ export default function GameFoods() {
     const { gameSlug } = useParams();
     const gameTitle = gameTitles[gameSlug];
     const gameDishes = dishes.filter((dish) => dish.gameSlug === gameSlug);
+    const { addItem, items } = useCart();
 
     if (!gameTitle) {
         return (
@@ -32,22 +34,26 @@ export default function GameFoods() {
             </header>
             <section className="food-card-grid" aria-label={`${gameTitle} dishes`}>
                 {gameDishes.map((dish) => (
-                    <NavLink
-                        key={dish.slug}
-                        to={`/games/${gameSlug}/foods/${dish.slug}`}
-                        className="food-card-link"
-                        aria-label={`View ${dish.name}`}
-                    >
-                        <Card className="food-card">
+                    <Card className="food-card" key={dish.slug}>
+                        <NavLink
+                            to={`/games/${gameSlug}/foods/${dish.slug}`}
+                            className="food-card-link"
+                            aria-label={`View ${dish.name}`}
+                        >
                             <div className="food-card-image-wrap">
                                 <Card.Img variant="top" src={dish.image} alt={dish.name} />
                             </div>
-                            <Card.Body>
+                        </NavLink>
+                        <Card.Body>
+                            <NavLink to={`/games/${gameSlug}/foods/${dish.slug}`} className="food-card-title-link">
                                 <Card.Title>{dish.name}</Card.Title>
-                                <Card.Text>{dish.description}</Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </NavLink>
+                            </NavLink>
+                            <Card.Text>{dish.description}</Card.Text>
+                            <button type="button" className="add-cart-button" onClick={() => addItem(dish.slug)}>
+                                {items[dish.slug] ? `Add another (${items[dish.slug]})` : "Add to cart"}
+                            </button>
+                        </Card.Body>
+                    </Card>
                 ))}
             </section>
         </main>

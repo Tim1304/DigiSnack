@@ -1,9 +1,11 @@
 import { NavLink, useParams } from "react-router";
 import { findDish } from "../data/dishes.js";
+import { useCart } from "../context/CartContext.jsx";
 
 export default function FoodDetails() {
     const { gameSlug, dishSlug } = useParams();
     const dish = findDish(gameSlug, dishSlug);
+    const { addItem, items } = useCart();
 
     if (!dish) {
         return (
@@ -34,6 +36,9 @@ export default function FoodDetails() {
                         <h2>Simple recipe</h2>
                         <p>{dish.recipe}</p>
                     </section>
+                    <button type="button" className="add-cart-button details-cart-button" onClick={() => addItem(dish.slug)}>
+                        {items[dish.slug] ? `Add another (${items[dish.slug]} in cart)` : "Add to cart"}
+                    </button>
                     <a href={dish.source} target="_blank" rel="noreferrer" className="source-link">
                         View source wiki
                     </a>
