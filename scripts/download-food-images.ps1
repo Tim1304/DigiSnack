@@ -16,12 +16,18 @@ $groups = @(
     @('pumpkin-pie','Pumpkin pie'), @('radscorpion-kebab','Radscorpion Kebab'), @('ribeye-steak','Ribeye steak'), @('silt-bean-puree','Silt bean puree'),
     @('smoked-mirelurk-fillets','Smoked mirelurk fillets'), @('squirrel-on-a-stick','Squirrel on a stick'), @('tato-salad','Tato salad'), @('tasty-squirrel-stew','Tasty squirrel stew')
   )},
-  @{ Folder='red-dead-redemption-2'; Api='https://reddead.fandom.com/api.php'; Items=@(
-    @('plain-big-game','Big Game Meat'), @('minty-big-game','Big Game Meat'), @('oregano-big-game','Big Game Meat'), @('thyme-big-game','Big Game Meat'),
-    @('plain-prime-beef','Prime Beef'), @('minty-prime-beef','Prime Beef'), @('oregano-prime-beef','Prime Beef'), @('thyme-prime-beef','Prime Beef'),
-    @('plain-mature-venison','Mature Venison'), @('minty-mature-venison','Mature Venison'), @('oregano-mature-venison','Mature Venison'), @('thyme-mature-venison','Mature Venison'),
-    @('plain-tender-pork','Tender Pork'), @('minty-tender-pork','Tender Pork'), @('oregano-tender-pork','Tender Pork'), @('thyme-tender-pork','Tender Pork'),
-    @('plain-succulent-fish','Succulent Fish Meat'), @('minty-succulent-fish','Succulent Fish Meat'), @('oregano-succulent-fish','Succulent Fish Meat'), @('thyme-succulent-fish','Succulent Fish Meat')
+  @{ Folder='minecraft'; Api='https://minecraft.fandom.com/api.php'; Items=@(
+    @('apple','Apple'), @('baked-potato','Baked Potato'), @('beetroot','Beetroot'), @('beetroot-soup','Beetroot Soup'),
+    @('bread','Bread'), @('cake','Cake'), @('carrot','Carrot'), @('chorus-fruit','Chorus Fruit'),
+    @('cooked-chicken','Cooked Chicken'), @('cooked-cod','Cooked Cod'), @('cooked-mutton','Cooked Mutton'), @('cooked-porkchop','Cooked Porkchop'),
+    @('cooked-rabbit','Cooked Rabbit'), @('cooked-salmon','Cooked Salmon'), @('cookie','Cookie'), @('dried-kelp','Dried Kelp'),
+    @('enchanted-golden-apple','Enchanted Golden Apple'), @('golden-apple','Golden Apple'), @('glow-berries','Glow Berries'), @('golden-carrot','Golden Carrot'),
+    @('honey-bottle','Honey Bottle'), @('melon-slice','Melon Slice'), @('mushroom-stew','Mushroom Stew'), @('poisonous-potato','Poisonous Potato'),
+    @('potato','Potato'), @('pufferfish','Pufferfish (item)'), @('pumpkin-pie','Pumpkin Pie'), @('rabbit-stew','Rabbit Stew'),
+    @('raw-beef','Raw Beef'), @('raw-chicken','Raw Chicken'), @('raw-cod','Raw Cod'), @('raw-mutton','Raw Mutton'),
+    @('raw-porkchop','Raw Porkchop'), @('raw-rabbit','Raw Rabbit'), @('raw-salmon','Raw Salmon'), @('rotten-flesh','Rotten Flesh'),
+    @('spider-eye','Spider Eye'), @('steak','Steak'), @('suspicious-stew','Suspicious Stew'), @('sweet-berries','Sweet Berries'),
+    @('tropical-fish','Tropical Fish (item)')
   )}
 )
 
@@ -30,6 +36,9 @@ foreach ($group in $groups) {
   New-Item -ItemType Directory -Force -Path $directory | Out-Null
   foreach ($item in $group.Items) {
     $slug, $title = $item
+    if (Get-ChildItem -LiteralPath $directory -File -Filter "$slug.*" | Select-Object -First 1) {
+      continue
+    }
     $query = [uri]::EscapeDataString($title)
     $uri = "$($group.Api)?action=query&format=json&redirects=1&prop=pageimages&piprop=original&titles=$query"
     $response = Invoke-RestMethod -Uri $uri
@@ -59,15 +68,8 @@ foreach ($group in $groups) {
   }
 }
 
-# The Red Dead wiki uses one HUD icon for all seasoning variants and does not
-# expose primary images for several base-meat pages. Preserve that source-faithful
-# convention by reusing the retrieved cooked-meat icon for those variants.
-$rdrDirectory = Join-Path $root 'red-dead-redemption-2'
-$rdrFallbacks = @(
-  'plain-mature-venison','minty-mature-venison','oregano-mature-venison','thyme-mature-venison',
-  'plain-tender-pork','minty-tender-pork','oregano-tender-pork','thyme-tender-pork',
-  'plain-succulent-fish','minty-succulent-fish','oregano-succulent-fish','thyme-succulent-fish'
-)
-foreach ($slug in $rdrFallbacks) {
-  Copy-Item (Join-Path $rdrDirectory 'plain-big-game.png') (Join-Path $rdrDirectory "$slug.png") -Force
+$cardApi = 'https://minecraft.fandom.com/api.php?action=query&format=json&prop=pageimages&piprop=thumbnail&pithumbsize=900&titles=Minecraft'
+$cardPage = (Invoke-RestMethod -Uri $cardApi).query.pages.PSObject.Properties.Value | Select-Object -First 1
+if ($cardPage.thumbnail.source) {
+  Invoke-WebRequest -Uri $cardPage.thumbnail.source -OutFile (Join-Path $PSScriptRoot '..\src\assets\GameCards\minecraft.png')
 }

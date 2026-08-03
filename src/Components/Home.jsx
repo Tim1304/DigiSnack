@@ -1,77 +1,139 @@
 import { useMemo, useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import { NavLink } from "react-router";
-import { dishes } from "../data/dishes.js";
+import { dishes, facetOptions } from "../data/dishes.js";
+import CartButton from "./CartButton.jsx";
+import SearchFacets from "./SearchFacets.jsx";
 import valheimImage from "../assets/GameCards/valheim.png";
-import rdr2Image from "../assets/GameCards/rdr2.png";
+import minecraftImage from "../assets/GameCards/minecraft.png";
 import fallout76Image from "../assets/GameCards/fo76.png";
 
 const games = [
     { title: "Valheim", slug: "valheim", image: valheimImage },
-    { title: "Red Dead Redemption 2", slug: "red-dead-redemption-2", image: rdr2Image },
+    { title: "Minecraft", slug: "minecraft", image: minecraftImage },
     { title: "Fallout 76", slug: "fallout-76", image: fallout76Image },
 ];
 
 export default function Home() {
     const [search, setSearch] = useState("");
-    const [hasFocus, setHasFocus] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [selectedFacets, setSelectedFacets] = useState([]);
 
-    const suggestions = useMemo(() => {
+    const filteredDishes = useMemo(() => {
         const query = search.trim().toLocaleLowerCase();
-        if (!query) return [];
+        const dietFacets = selectedFacets.filter((facet) =>
+            facetOptions.some((option) => option.id === facet && option.group === "diet"),
+        );
+        const mealFacets = selectedFacets.filter((facet) =>
+            facetOptions.some((option) => option.id === facet && option.group === "meal"),
+        );
 
         return dishes
-            .filter((dish) =>
-                `${dish.name} ${dish.game}`.toLocaleLowerCase().includes(query),
-            )
-            .slice(0, 8);
-    }, [search]);
+            .filter((dish) => !query ||
+                `${dish.name} ${dish.game}`.toLocaleLowerCase().includes(query))
+            .filter((dish) => dietFacets.length === 0 ||
+                dietFacets.some((facet) => dish.tags.includes(facet)))
+            .filter((dish) => mealFacets.length === 0 ||
+                mealFacets.some((facet) => dish.tags.includes(facet)));
+    }, [search, selectedFacets]);
 
-    const showSuggestions = hasFocus && search.trim().length > 0;
+    const suggestions = filteredDishes.slice(0, 8);
+
+    function toggleFacet(facet) {
+        setSelectedFacets((current) => {
+            if (current.includes(facet)) {
+                return current.filter((item) => item !== facet);
+            }
+
+            const selectedOption = facetOptions.find((option) => option.id === facet);
+            if (selectedOption?.group === "diet") {
+                const dietFacetIds = facetOptions
+                    .filter((option) => option.group === "diet")
+                    .map((option) => option.id);
+
+                return [
+                    ...current.filter((item) => !dietFacetIds.includes(item)),
+                    facet,
+                ];
+            }
+
+            return [...current, facet];
+        });
+    }
 
     return (
         <main className="home-page">
-            <div id="search" className="search-container">
-                <Form.Control
-                    className="search-input"
-                    placeholder="Search dishes..."
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    onFocus={() => setHasFocus(true)}
-                    onBlur={() => setHasFocus(false)}
-                    role="combobox"
-                    aria-label="Search dishes"
-                    aria-autocomplete="list"
-                    aria-controls="dish-suggestions"
-                    aria-expanded={showSuggestions}
-                />
-                {showSuggestions && (
-                    <div
-                        id="dish-suggestions"
-                        className="search-suggestions"
-                        role="listbox"
-                    >
-                        {suggestions.length > 0 ? (
-                            suggestions.map((dish) => (
-                                <NavLink
-                                    key={`${dish.gameSlug}-${dish.slug}`}
-                                    to={`/games/${dish.gameSlug}/foods/${dish.slug}`}
-                                    className="search-suggestion"
-                                    role="option"
-                                    onMouseDown={(event) => event.preventDefault()}
-                                >
-                                    <img src={dish.image} alt="" width={"40px"} height={"40px"} />
-                                    <span>
-                                        <strong>{dish.name}</strong>
-                                        <small>{dish.game}</small>
-                                    </span>
-                                </NavLink>
-                            ))
-                        ) : (
-                            <p className="no-suggestions">No dishes found.</p>
-                        )}
-                    </div>
-                )}
+            <div className="search-row">
+                <div
+                    id="search"
+                    className="search-container"
+                    onFocusCapture={() => setIsSearchOpen(true)}
+                    onBlurCapture={(event) => {
+                        if (!event.currentTarget.contains(event.relatedTarget)) {
+                            setIsSearchOpen(false);
+                        }
+                    }}
+                >
+                    <Form.Control
+                        className="search-input"
+                        placeholder="Search dishes..."
+                        value={search}
+                        onChange={(event) => {
+                            setSearch(event.target.value);
+                            setIsSearchOpen(true);
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === "Escape") {
+                                setIsSearchOpen(false);
+                                event.currentTarget.blur();
+                            }
+                        }}
+                        role="combobox"
+                        aria-label="Search dishes"
+                        aria-autocomplete="list"
+                        aria-controls="dish-suggestions"
+                        aria-expanded={isSearchOpen}
+                    />
+                    {isSearchOpen && (
+                        <div className="search-suggestions">
+                            <div className="suggestion-results">
+                                <p className="suggestion-count">
+                                    {filteredDishes.length} {filteredDishes.length === 1 ? "dish" : "dishes"}
+                                </p>
+                                <div id="dish-suggestions" role="listbox">
+                                    {suggestions.length > 0 ? (
+                                        suggestions.map((dish) => (
+                                            <NavLink
+                                                key={`${dish.gameSlug}-${dish.slug}`}
+                                                to={`/games/${dish.gameSlug}/foods/${dish.slug}`}
+                                                className="search-suggestion"
+                                                role="option"
+                                            >
+                                                <img
+                                                    src={dish.image}
+                                                    alt=""
+                                                    className={dish.gameSlug === "minecraft" ? "pixel-art" : undefined}
+                                                />
+                                                <span>
+                                                    <strong>{dish.name}</strong>
+                                                    <small>{dish.game}</small>
+                                                </span>
+                                            </NavLink>
+                                        ))
+                                    ) : (
+                                        <p className="no-suggestions">No dishes match those filters.</p>
+                                    )}
+                                </div>
+                            </div>
+                            <SearchFacets
+                                selectedFacets={selectedFacets}
+                                onToggle={toggleFacet}
+                                onClear={() => setSelectedFacets([])}
+                            />
+                        </div>
+                    )}
+                </div>
+                <CartButton />
             </div>
 
             <section className="game-card-grid" aria-label="Games">

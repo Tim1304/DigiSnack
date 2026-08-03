@@ -2,10 +2,11 @@ import { Card } from "react-bootstrap";
 import { NavLink, useParams } from "react-router";
 import { dishes } from "../data/dishes.js";
 import { useCart } from "../context/CartContext.jsx";
+import Breadcrumbs from "./Breadcrumbs.jsx";
 
 const gameTitles = {
     valheim: "Valheim",
-    "red-dead-redemption-2": "Red Dead Redemption 2",
+    minecraft: "Minecraft",
     "fallout-76": "Fallout 76",
 };
 
@@ -18,15 +19,21 @@ export default function GameFoods() {
     if (!gameTitle) {
         return (
             <main className="game-foods-page details-empty">
+                <Breadcrumbs items={[
+                    { label: "Home", to: "/" },
+                    { label: "Game not found" },
+                ]} />
                 <h1>Game not found</h1>
-                <NavLink to="/" className="back-link">Back to games</NavLink>
             </main>
         );
     }
 
     return (
         <main className="game-foods-page">
-            <NavLink to="/" className="back-link">&larr; Back to games</NavLink>
+            <Breadcrumbs items={[
+                { label: "Home", to: "/" },
+                { label: gameTitle },
+            ]} />
             <header className="game-foods-header">
                 <p>Food collection</p>
                 <h1>{gameTitle}</h1>
@@ -41,7 +48,12 @@ export default function GameFoods() {
                             aria-label={`View ${dish.name}`}
                         >
                             <div className="food-card-image-wrap">
-                                <Card.Img variant="top" src={dish.image} alt={dish.name} />
+                                <Card.Img
+                                    variant="top"
+                                    src={dish.image}
+                                    alt={dish.name}
+                                    className={dish.gameSlug === "minecraft" ? "pixel-art" : undefined}
+                                />
                             </div>
                         </NavLink>
                         <Card.Body>
