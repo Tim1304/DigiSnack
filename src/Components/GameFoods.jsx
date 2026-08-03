@@ -58,7 +58,7 @@ export default function GameFoods() {
                         </NavLink>
                         <Card.Body>
                             <NavLink to={`/games/${gameSlug}/foods/${dish.slug}`} className="food-card-title-link">
-                                <Card.Title>{dish.name}</Card.Title>
+                                <Card.Title as="h2">{dish.name}</Card.Title>
                             </NavLink>
                             <Card.Text>{dish.description}</Card.Text>
                             <button type="button" className="add-cart-button" onClick={() => addItem(dish.slug)}>

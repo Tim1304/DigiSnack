@@ -63,6 +63,7 @@ export default function Home() {
 
     return (
         <main className="home-page">
+            <h1 className="visually-hidden">DigiSnack game library</h1>
             <div className="search-row">
                 <div
                     id="search"
@@ -136,7 +137,8 @@ export default function Home() {
                 <CartButton />
             </div>
 
-            <section className="game-card-grid" aria-label="Games">
+            <section className="game-card-grid" aria-labelledby="games-heading">
+                <h2 id="games-heading" className="visually-hidden">Choose a game</h2>
                 {games.map((game) => (
                     <NavLink
                         key={game.slug}
@@ -145,9 +147,9 @@ export default function Home() {
                         aria-label={`View ${game.title}`}
                     >
                         <Card className="game-card">
-                            <Card.Img variant="top" src={game.image} alt={game.title} />
+                            <Card.Img variant="top" src={game.image} alt={`${game.title} homepage poster`} />
                             <Card.Body>
-                                <Card.Title>{game.title}</Card.Title>
+                                <Card.Title as="h3">{game.title}</Card.Title>
                             </Card.Body>
                         </Card>
                     </NavLink>
