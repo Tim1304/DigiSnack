@@ -17,8 +17,8 @@ body {
   height: 2.75rem;
   flex: 0 0 auto;
   place-items: center;
-  background: #222d43;
-  border: 1px solid #536786;
+  background: #146c4b;
+  border: 1px solid #4fc98b;
   border-radius: 50%;
   box-shadow: 0 8px 22px rgb(0 0 0 / 35%);
   transition: transform 160ms ease, background-color 160ms ease;
@@ -27,8 +27,8 @@ body {
 .cart-nav:hover,
 .cart-nav:focus-visible {
   transform: translateY(-2px);
-  background: #334362;
-  outline: 3px solid #7db7ff;
+  background: #1d8d64;
+  outline: 3px solid #8af0b4;
   outline-offset: 3px;
 }
 
@@ -48,11 +48,12 @@ body {
   padding: 0 0.3rem;
   place-items: center;
   color: #fff;
-  background: #df4f4f;
-  border: 2px solid #151c2c;
+  background: #8b1e2d;
+  border: 2px solid #fff;
   border-radius: 999px;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 55%);
 }
 
 body {
