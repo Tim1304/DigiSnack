@@ -11,7 +11,7 @@ import { CartProvider } from "./context/CartContext.jsx";
 
 function DigiSnack() {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
             <CartProvider>
                 <PrimaryNav />
                 <Routes>
